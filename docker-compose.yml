@@ -1,9 +1,25 @@
-version: '2'
+version: '3.3'
 services:
-  php:
-    image: yiisoftware/yii2-php:7.1-apache
+  web:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php73
+    depends_on:
+      - db
     volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./:/app:delegated
+      - ./php:/var/www/html/
     ports:
-      - '8000:80'
+      - 8000:80
+  db:
+    container_name: mysql8
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: cepavif
+      MYSQL_USER: alon
+      MYSQL_PASSWORD: alon
+    ports:
+      - 6033:3306
